@@ -18,14 +18,17 @@ public class DeadLetteringConsumer {
 
   @RabbitHandler
   public void receive(final String message) {
-    //possible 1, 2,
+    //possible 1, 2
     final int random = ThreadLocalRandom.current().nextInt(1, 3);
     log.info("RANDOM RESULT: " + random);
     if(random == 2) {
       log.info("Will be dead-lettered");
+
+      //https://medium.com/@kiennguyen88/rabbitmq-delay-retry-schedule-with-dead-letter-exchange-31fb25a440fc
+
     }
     else {
-      log.info("RANDOM received: " + message);
+      log.info("Received: " + message);
     }
   }
 }
