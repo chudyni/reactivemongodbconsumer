@@ -1,44 +1,27 @@
 package com.home.reactivemongodbconsumer;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ReactivemongodbconsumerApplication {
 
-  private static final String LATER_EXCHANGE = "laterExchange";
+  public static final String LATER_EXCHANGE = "laterExchange";             //retry exchange
+  public static final String LATER_QUEUE = "laterQueue";                    //retry queue
+  public static final String LATER_KEY = "laterKey";
+
+//  public static final String RANDOM_EXCHANGE = "randomExchange";
+  public static final String RANDOM_QUEUE_NAME = "randomQueue";             //working queue
+//  public static final String RANDOM_key = "random";
 
   public static final String NOTIFICATION_QUEUE_NAME = "notificationQueue";
-  public static final String RANDOM_QUEUE_NAME = "randomQueue";
-  public static final String LATER_QUEUE_NAME = "laterQueue";
 
-  public static final String LATER_KEY = "random";
+//  Rabbit Delayed Message Exchange
+//  https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
+//  https://hub.docker.com/r/tetsuobe/rabbitmq-delayed-message-exchange/dockerfile/
 
   public static void main(String[] args) {
     SpringApplication.run(ReactivemongodbconsumerApplication.class, args);
   }
 
-  @Bean
-  public DirectExchange laterExchange() {
-    final DirectExchange delayed = new DirectExchange(LATER_EXCHANGE);
-    delayed.setDelayed(true);
-    return delayed;
-  }
-
-  @Bean
-  public Queue laterQueue() {
-    return new Queue(LATER_QUEUE_NAME);
-  }
-
-  @Bean
-  public Binding randomQueueBinding(final DirectExchange laterExchange, final Queue laterQueue) {
-    return BindingBuilder.bind(laterQueue)
-            .to(laterExchange)
-            .with(LATER_KEY);
-  }
 }

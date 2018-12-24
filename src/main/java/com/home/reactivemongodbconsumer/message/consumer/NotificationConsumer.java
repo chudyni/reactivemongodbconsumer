@@ -1,5 +1,6 @@
 package com.home.reactivemongodbconsumer.message.consumer;
 
+import com.home.reactivemongodbapi.model.impl.Blog;
 import com.home.reactivemongodbconsumer.ReactivemongodbconsumerApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;

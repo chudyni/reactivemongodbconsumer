@@ -1,11 +1,10 @@
 package com.home.reactivemongodbconsumer.message.consumer;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.ThreadLocalRandom;
 
+import com.home.reactivemongodbapi.model.impl.Blog;
 import com.home.reactivemongodbconsumer.ReactivemongodbconsumerApplication;
-import com.home.reactivemongodbconsumer.message.producer.PutForLaterProducer;
+import com.home.reactivemongodbconsumer.message.producer.LaterProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -17,29 +16,32 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-@RabbitListener(queues = ReactivemongodbconsumerApplication.RANDOM_QUEUE_NAME)
+//@RabbitListener(queues = ReactivemongodbconsumerApplication.RANDOM_QUEUE_NAME)
 public class RandomConsumer {
 
   @Autowired
-  private PutForLaterProducer putForLaterProducer;
+  private LaterProducer putForLaterProducer;
 
-  final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-  @RabbitHandler
-  public void receive(final String message) {
+//  @RabbitHandler
+  @RabbitListener(queues = ReactivemongodbconsumerApplication.RANDOM_QUEUE_NAME)
+  public void receive(final Blog message) {
     //possible 1, 2
-    final int random = ThreadLocalRandom.current().nextInt(1, 3);
-    log.info("RANDOM RESULT: " + random);
-    if(random == 2) {
-//      log.info("Will be dead-lettered");
-      //https://medium.com/@kiennguyen88/rabbitmq-delay-retry-schedule-with-dead-letter-exchange-31fb25a440fc
-      //https://www.cloudamqp.com/docs/delayed-messages.html
+//    final int random = ThreadLocalRandom.current().nextInt(1, 3);
+//    log.info("RANDOM RESULT: " + random);
+//    if(random == 2) {
+////      log.info("Will be dead-lettered");
 
-      log.info("Will be put for latter on own queue " + this.sdf.format(new Date()));
-      this.putForLaterProducer.putForLatter(message);
-    }
-    else {
-      log.info("Received: " + message);
-    }
+//
+//      log.info("Will be put for latter on own queue " + this.sdf.format(new Date()));
+//      this.putForLaterProducer.putForLatter(message);
+//    }
+//    else {
+//      log.info("Received: " + message);
+//    }
+
+
+    log.info("Received: " + message);
+    log.info("Delaying message TIME - NOW - " + new Date());
+    this.putForLaterProducer.putForLatter(message);
   }
 }
